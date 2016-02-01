@@ -12,6 +12,9 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -91,9 +94,9 @@ public class RegistrationActivity extends AppCompatActivity {
     private View.OnClickListener registerListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (!nameEditText.getText().toString().isEmpty()
-                    && !emailEditText.getText().toString().isEmpty()
-                    && !passwordEditText.toString().isEmpty()) {
+            if (!nameEditText.getText().toString().trim().isEmpty()
+                    && !emailEditText.getText().toString().trim().isEmpty()
+                    && !passwordEditText.toString().trim().isEmpty()) {
                 progress.show();
                 new Thread(new Runnable() {
                     @Override
@@ -123,13 +126,14 @@ public class RegistrationActivity extends AppCompatActivity {
     private View.OnClickListener loginListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (!emailEditText1.getText().toString().isEmpty()
-                    && !passwordEditText1.getText().toString().isEmpty()) {
+            if (!emailEditText1.getText().toString().trim().isEmpty()
+                    && !passwordEditText1.getText().toString().trim().isEmpty()) {
                 progress.show();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        LoginUser myReq = new LoginUser(emailEditText1.getText().toString(), passwordEditText1.getText().toString());
+                        LoginUser myReq = new LoginUser(emailEditText1.getText().toString().trim(),
+                                passwordEditText1.getText().toString().trim());
                         String response = HelperMethods.makePostRequest(RegistrationActivity.this, Constants.LOGIN, myReq);
                         if (!response.isEmpty()) {
                             LoginUserResponse myResponse = new Gson().fromJson(response, LoginUserResponse.class);
@@ -138,9 +142,10 @@ public class RegistrationActivity extends AppCompatActivity {
                                 SharedPreferences.Editor editor = sf.edit();
                                 editor.putBoolean(Constants.SignInDone, true);
                                 editor.putString(Constants.UserName, myResponse.name);
-                                editor.putString(Constants.UserEmail, emailEditText1.getText().toString());
-                                editor.putString(Constants.UserPassword, passwordEditText1.getText().toString());
+                                editor.putString(Constants.UserEmail, emailEditText1.getText().toString().trim());
+                                editor.putString(Constants.UserPassword, passwordEditText1.getText().toString().trim());
                                 editor.putInt(Constants.UserId, myResponse.id);
+                                editor.putBoolean(Constants.IsReLogin, true);
                                 editor.apply();
                                 runOnUiThread(new Runnable() {
                                     @Override
@@ -263,9 +268,9 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void SendRegistrationInfoToBackend() {
-        RegisterUser myInfo = new RegisterUser(nameEditText.getText().toString(),
-                emailEditText.getText().toString(),
-                passwordEditText.getText().toString(),
+        RegisterUser myInfo = new RegisterUser(nameEditText.getText().toString().trim(),
+                emailEditText.getText().toString().trim(),
+                passwordEditText.getText().toString().trim(),
                 regid);
         String response = HelperMethods.makePostRequest(RegistrationActivity.this.getApplicationContext(), Constants.ADD_SUBSCRIBER, myInfo);
         if (!response.equals("")) {
@@ -274,9 +279,9 @@ public class RegistrationActivity extends AppCompatActivity {
                 SharedPreferences sf = getSharedPreferences(Constants.UserInfoSharedPref, MODE_PRIVATE);
                 SharedPreferences.Editor editor = sf.edit();
                 editor.putBoolean(Constants.SignInDone, true);
-                editor.putString(Constants.UserName, nameEditText.getText().toString());
-                editor.putString(Constants.UserEmail, emailEditText.getText().toString());
-                editor.putString(Constants.UserPassword, passwordEditText.getText().toString());
+                editor.putString(Constants.UserName, nameEditText.getText().toString().trim());
+                editor.putString(Constants.UserEmail, emailEditText.getText().toString().trim());
+                editor.putString(Constants.UserPassword, passwordEditText.getText().toString().trim());
                 editor.putInt(Constants.UserId, myResponse.id);
                 editor.apply();
                 runOnUiThread(new Runnable() {
@@ -311,4 +316,6 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }

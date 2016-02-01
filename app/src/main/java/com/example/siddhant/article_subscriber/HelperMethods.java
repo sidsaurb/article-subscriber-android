@@ -5,7 +5,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.text.Editable;
+import android.widget.Toast;
 
+import com.example.siddhant.article_subscriber.activities.FeedActivity;
+import com.example.siddhant.article_subscriber.networkClasses.GetCategoriesResponse;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -56,4 +60,39 @@ public class HelperMethods {
         }
     }
 
+    public static boolean getAndSaveCategories(final Context context) {
+        try {
+            URL url = new URL("http://" + Constants.SERVER_IP + Constants.GET_CATEGORIES);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            String line;
+            InputStreamReader isr = new InputStreamReader(
+                    conn.getInputStream());
+            BufferedReader reader = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            isr.close();
+            reader.close();
+            String response = sb.toString();
+            GetCategoriesResponse myResponse = new Gson().fromJson(response, GetCategoriesResponse.class);
+            if (myResponse.success) {
+                SharedPreferences sf = context.getSharedPreferences(Constants.UserInfoSharedPref, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sf.edit();
+                editor.putString(Constants.Categories, response);
+                editor.commit();
+                ((Activity) context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(context, "Category list updated", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                return true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
 }

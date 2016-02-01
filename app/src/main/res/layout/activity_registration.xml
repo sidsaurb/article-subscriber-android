@@ -135,6 +135,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Email"
+            android:text="saurabhsiddhant25@gmail.com"
             android:inputType="textEmailAddress"
             android:textColor="@color/gray1" />
 
@@ -156,6 +157,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Password"
+            android:text="siddhant"
             android:inputType="textPassword"
             android:textColor="@color/gray1" />
 
