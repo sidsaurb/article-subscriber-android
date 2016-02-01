@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.example.siddhant.article_subscriber.Constants;
 import com.example.siddhant.article_subscriber.DummyActivity;
@@ -42,7 +43,6 @@ public class SubscriberGcmService extends IntentService {
 
             if (!extras.isEmpty()) {
                 if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-//                    String data = extras.getString("data");
                     Article article = new Article(
                             Integer.parseInt(extras.getString("id")),
                             extras.getString("name"),
@@ -52,8 +52,6 @@ public class SubscriberGcmService extends IntentService {
                             Long.parseLong(extras.getString("timestamp")),
                             extras.getInt("publisher")
                     );
-//                    Article article =
-//                            new Gson().fromJson(data, Article.class);
                     if (sf.getBoolean(Constants.SignInDone, false)) {
                         sendNotification(article);
                     }
@@ -86,6 +84,8 @@ public class SubscriberGcmService extends IntentService {
             mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
             mNotifyBuilder = new NotificationCompat.Builder(this)
+                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
                     .setContentTitle("An article just got published")
                     .setContentText("\"" + article.title + "\" by " + article.name)
                     .setSmallIcon(R.mipmap.ic_launcher)
@@ -100,6 +100,20 @@ public class SubscriberGcmService extends IntentService {
             mNotifyBuilder.setDefaults(defaults);
             mNotifyBuilder.setAutoCancel(true);
             mNotificationManager.notify(4321, mNotifyBuilder.build());
+
+            SharedPreferences.Editor editor = sf.edit();
+            editor.putBoolean(Constants.ReloadFeeds, true);
+            editor.commit();
+
+            Intent intent = new Intent("notification_received");
+            intent.putExtra("name", article.name);
+            intent.putExtra("email", article.email);
+            intent.putExtra("id", article.id);
+            intent.putExtra("categoryId", article.category);
+            intent.putExtra("timestamp", article.timestamp);
+            intent.putExtra("title", article.title);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
         } catch (Exception ignored) {
 
         }

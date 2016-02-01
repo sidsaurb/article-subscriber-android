@@ -170,6 +170,9 @@ public class SelectSubscriptionActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 progress.dismiss();
+                                SharedPreferences.Editor editor = sf.edit();
+                                editor.putBoolean(Constants.ReloadFeeds, true);
+                                editor.commit();
                                 Toast.makeText(SelectSubscriptionActivity.this, "Subscriptions updated", Toast.LENGTH_SHORT).show();
                             }
                         });

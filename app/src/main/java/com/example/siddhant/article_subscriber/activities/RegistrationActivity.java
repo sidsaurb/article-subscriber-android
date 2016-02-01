@@ -12,9 +12,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -151,7 +148,9 @@ public class RegistrationActivity extends AppCompatActivity {
                                     @Override
                                     public void run() {
                                         progress.dismiss();
-                                        startActivity(new Intent(RegistrationActivity.this, FeedActivity.class));
+                                        Intent i = new Intent(RegistrationActivity.this, FeedActivity.class);
+                                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(i);
                                     }
                                 });
                             } else {
@@ -288,7 +287,9 @@ public class RegistrationActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         progress.dismiss();
-                        startActivity(new Intent(RegistrationActivity.this, FeedActivity.class));
+                        Intent i = new Intent(RegistrationActivity.this, FeedActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(i);
                     }
                 });
             } else {
@@ -316,6 +317,4 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }

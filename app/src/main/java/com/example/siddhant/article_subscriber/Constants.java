@@ -4,7 +4,7 @@ package com.example.siddhant.article_subscriber;
  * Created by siddhant on 31/1/16.
  */
 public class Constants {
-    public static final String SERVER_IP = "172.27.22.239:8082";
+    public static final String SERVER_IP = "104.199.148.118:8082";
 
     public static final String LOGIN = "/subscriber/do_login";
     public static final String GET_CATEGORIES = "/get_categories";
@@ -25,4 +25,5 @@ public class Constants {
     public static final String UserId = "UserId";
     public static final String IsReLogin = "IsReLogin";
     public static final String Categories = "Categories";
+    public static final String ReloadFeeds = "ReloadFeeds";
 }
