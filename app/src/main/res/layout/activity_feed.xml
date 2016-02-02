@@ -108,4 +108,13 @@
             android:textSize="17sp"
             android:textStyle="bold" />
     </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addSubscriptionButton"
+        style="@style/floating_action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_playlist_add_white_48dp" />
 </RelativeLayout>

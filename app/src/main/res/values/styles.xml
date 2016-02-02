@@ -22,4 +22,7 @@
         <item name="android:textColor">@color/red</item>
     </style>
 
+    <style name="floating_action_button">
+        <item name="android:layout_margin">0dp</item>
+    </style>
 </resources>

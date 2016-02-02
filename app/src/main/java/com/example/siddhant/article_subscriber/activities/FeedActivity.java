@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -65,12 +66,16 @@ public class FeedActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        sf = getSharedPreferences(Constants.UserInfoSharedPref, MODE_PRIVATE);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             SpannableString s = new SpannableString("Feeds");
             s.setSpan(new TypefaceSpan(Globals.typeface), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             actionBar.setTitle(s);
+            SpannableString s1 = new SpannableString("Hello " + sf.getString(Constants.UserName, "").split(" ")[0] + "!");
+            s1.setSpan(new TypefaceSpan(Globals.typeface), 0, s1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            actionBar.setSubtitle(s1);
         }
 
 //        progress = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
@@ -86,7 +91,6 @@ public class FeedActivity extends AppCompatActivity {
         problemRelativeLayout = (RelativeLayout) findViewById(R.id.problemRelativeLayout);
 
 
-        sf = getSharedPreferences(Constants.UserInfoSharedPref, MODE_PRIVATE);
         if (sf.getBoolean(Constants.IsReLogin, false)) {
             updateRegistrationId();
         }
@@ -110,6 +114,14 @@ public class FeedActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 LoadListView();
+            }
+        });
+
+        FloatingActionButton addSubscriptionButton = (FloatingActionButton) findViewById(R.id.addSubscriptionButton);
+        addSubscriptionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(FeedActivity.this, SelectSubscriptionActivity.class));
             }
         });
     }
@@ -307,23 +319,23 @@ public class FeedActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_feed, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_select:
-                startActivity(new Intent(FeedActivity.this, SelectSubscriptionActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.menu_feed, menu);
+//        return super.onCreateOptionsMenu(menu);
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.action_select:
+//                startActivity(new Intent(FeedActivity.this, SelectSubscriptionActivity.class));
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
